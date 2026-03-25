@@ -1,0 +1,178 @@
+{
+	"name": "df_healthcare_trasformation",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_healthcare_sql",
+						"type": "DatasetReference"
+					},
+					"name": "source"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_insurancepro",
+						"type": "DatasetReference"
+					},
+					"name": "sink"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_hospital",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_medicalcondition",
+						"type": "DatasetReference"
+					},
+					"name": "sink2"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_gender",
+						"type": "DatasetReference"
+					},
+					"name": "sink3"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_agegroup",
+						"type": "DatasetReference"
+					},
+					"name": "sink4"
+				}
+			],
+			"transformations": [
+				{
+					"name": "derivedColumn"
+				},
+				{
+					"name": "filter"
+				},
+				{
+					"name": "aggregate"
+				},
+				{
+					"name": "aggregatebyGender"
+				},
+				{
+					"name": "aggregatebyMedicalCondition"
+				},
+				{
+					"name": "aggregatebyHospital"
+				},
+				{
+					"name": "aggregatebyInsuranceProvider",
+					"description": "Aggregating data by 'Insurance-Provider' producing columns 'Total-Billing'"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          Patient_ID as string,",
+				"          Age as string,",
+				"          Gender as string,",
+				"          Blood_Type as string,",
+				"          Medical_Condition as string,",
+				"          Date_of_Admission as string,",
+				"          Doctor as string,",
+				"          Hospital as string,",
+				"          Insurance_Provider as string,",
+				"          Billing_Amount as string,",
+				"          Room_Number as string,",
+				"          Admission_Type as string,",
+				"          Discharge_Date as string,",
+				"          Medication as string,",
+				"          Test_Results as string,",
+				"          Hospital_Latitude as string,",
+				"          Hospital_Longitude as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> source",
+				"source derive(Length_of_Stay = toInteger(toDate(Discharge_Date) - toDate(Date_of_Admission)),",
+				"          Age = toInteger(Age),",
+				"          Billing_Amount = toDecimal(Billing_Amount),",
+				"          Date_of_Admission = toDate(Date_of_Admission),",
+				"          Discharge_Date = toDate(Discharge_Date),",
+				"          Age_Group = iif(Age >= '13' && Age <= '19', '13-19', iif(Age >= '20' && Age <= '29', '20-29', iif(Age >= '30' && Age <= '39', '30-39', iif(Age >= '40' && Age <= '49', '40-49', iif(Age >= '50' && Age <= '59', '50-59', iif(Age >= '60' && Age <= '69', '60-69', iif(Age >= '70' && Age <= '79', '70-79', iif(Age >= '80' && Age <= '89', '80-89', 'Other'))))))))) ~> derivedColumn",
+				"derivedColumn filter(!isNull(Age) && toInteger(Age) > 0) ~> filter",
+				"filter aggregate(groupBy(Age_Group),",
+				"     Total_patient = count(Patient_ID),",
+				"          {Total Billing} = sum(Billing_Amount)) ~> aggregate",
+				"filter aggregate(groupBy(Gender),",
+				"     {Total-Patient} = count(Patient_ID),",
+				"          {Total-Billing} = sum(Billing_Amount)) ~> aggregatebyGender",
+				"filter aggregate(groupBy(Medical_Condition),",
+				"     {Total-Patient} = count(Patient_ID),",
+				"          {Total-Billing} = sum(Billing_Amount)) ~> aggregatebyMedicalCondition",
+				"filter aggregate(groupBy(Hospital),",
+				"     {Total-Patient} = count(Patient_ID)) ~> aggregatebyHospital",
+				"filter aggregate(groupBy(Insurance_Provider),",
+				"     {Total-Billing} = sum(Billing_Amount)) ~> aggregatebyInsuranceProvider",
+				"aggregatebyInsuranceProvider sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     recreate:true,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sink",
+				"aggregatebyHospital sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     recreate:true,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sink1",
+				"aggregatebyMedicalCondition sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     recreate:true,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sink2",
+				"aggregatebyGender sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     recreate:true,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sink3",
+				"aggregate sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     recreate:true,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sink4"
+			]
+		}
+	}
+}

@@ -1,0 +1,17 @@
+{
+	"name": "ds_hospital",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_sql_healthcare",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "hospital"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,9 @@
+{
+	"name": "adf-11healthcare-project11",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "10123822-4342-4535-b03e-d8a6da47aa11",
+		"tenantId": "0309ea32-5524-414f-9785-c7a6e6d956d0"
+	}
+}

@@ -1,0 +1,17 @@
+{
+	"name": "ds_gender",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_sql_healthcare",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "gender"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,17 @@
+{
+	"name": "ds_insurancepro",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_sql_healthcare",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "insurancepro"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,86 @@
+{
+	"name": "ds_healthcare_sql",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_sql_healthcare",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "Patient_ID",
+				"type": "varchar"
+			},
+			{
+				"name": "Age",
+				"type": "varchar"
+			},
+			{
+				"name": "Gender",
+				"type": "varchar"
+			},
+			{
+				"name": "Blood_Type",
+				"type": "varchar"
+			},
+			{
+				"name": "Medical_Condition",
+				"type": "varchar"
+			},
+			{
+				"name": "Date_of_Admission",
+				"type": "varchar"
+			},
+			{
+				"name": "Doctor",
+				"type": "varchar"
+			},
+			{
+				"name": "Hospital",
+				"type": "varchar"
+			},
+			{
+				"name": "Insurance_Provider",
+				"type": "varchar"
+			},
+			{
+				"name": "Billing_Amount",
+				"type": "varchar"
+			},
+			{
+				"name": "Room_Number",
+				"type": "varchar"
+			},
+			{
+				"name": "Admission_Type",
+				"type": "varchar"
+			},
+			{
+				"name": "Discharge_Date",
+				"type": "varchar"
+			},
+			{
+				"name": "Medication",
+				"type": "varchar"
+			},
+			{
+				"name": "Test_Results",
+				"type": "varchar"
+			},
+			{
+				"name": "Hospital_Latitude",
+				"type": "varchar"
+			},
+			{
+				"name": "Hospital_Longitude",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "stg_healthcare_data"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
